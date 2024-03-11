@@ -51,9 +51,9 @@ client, _ := builder.
 Basic information about the request user.
 Field Name | Type | Optional? | Description
 ---------- | ---- | --------- | -----------
-`userId` | String | Yes | The platform user id, cleared from Promoted logs.
+`userId` | String | Yes | The platform authenticated user id.  This is pseudo anonymized in Promoted's long-term logs.
 `anonUserId` | String | Yes | A different user id (presumably a UUID) disconnected from the platform user id (e.g. an "anonymous user id"), good for working with unauthenticated users or implementing right-to-be-forgotten.
-`isInternalUser` | boolean | Yes | If this user is a test user or not, defaults to false.
+`isInternalUser` | boolean | Yes | If this user is an internal (test, support, employee) user or not, defaults to false.
 
 ---
 
@@ -160,7 +160,7 @@ Field Name | Type | Optional? | Description
 Information about the user's browser.
 Field Name | Type | Optional? | Description
 ---------- | ---- | --------- | -----------
-`user_agent` | String | Yes | Browser user agent string
+`userAgent` | String | Yes | Browser user agent string
 `viewportSize` | Size | Yes | Size of the browser viewport
 `clientHints` | ClientHints | Yes | HTTP client hints structure
 
