@@ -213,7 +213,7 @@ func (client *PromotedDeliveryClient) fillInRequestFields(req *delivery.Request)
 	}
 	clientInfo := req.ClientInfo
 	clientInfo.ClientType = common.ClientInfo_PLATFORM_SERVER
-	clientInfo.TrafficType = common.ClientInfo_SHADOW
+	clientInfo.TrafficType = common.ClientInfo_PRODUCTION
 
 	// Fill in client timestamp if not set by the caller.
 	client.ensureClientTimestamp(req)
