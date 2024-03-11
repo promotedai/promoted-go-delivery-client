@@ -2,11 +2,12 @@ package delivery
 
 import (
 	"errors"
-	"math"
 
 	"github.com/google/uuid"
 	"github.com/promotedai/schema/generated/go/proto/delivery"
 )
+
+const maxInt = 2147483647
 
 // SDKDelivery implements SDK-side delivery.
 type SDKDelivery struct{}
@@ -31,9 +32,12 @@ func (sdk *SDKDelivery) RunDelivery(deliveryRequest *DeliveryRequest) (*delivery
 	}
 
 	// Adjust offset and size.
-	offset := uint64(math.Max(0, float64(paging.GetOffset())))
-	index := offset - uint64(deliveryRequest.RetrievalInsertionOffset)
-	if offset < uint64(deliveryRequest.RetrievalInsertionOffset) {
+	if deliveryRequest.RetrievalInsertionOffset > maxInt {
+		return nil, errors.New("RetrievalInsertionOffset is too large")
+	}
+	offset := max(0, int(paging.GetOffset()))
+	index := offset - deliveryRequest.RetrievalInsertionOffset
+	if offset < deliveryRequest.RetrievalInsertionOffset {
 		return nil, errors.New("offset should be >= insertion start (specifically, the global position)")
 	}
 
@@ -42,7 +46,7 @@ func (sdk *SDKDelivery) RunDelivery(deliveryRequest *DeliveryRequest) (*delivery
 		size = len(req.Insertion)
 	}
 
-	finalInsertionSize := int(math.Min(float64(size), float64(uint64(len(req.Insertion))-index)))
+	finalInsertionSize := min(size, len(req.Insertion)-index)
 	resp := &delivery.Response{RequestId: req.RequestId, Insertion: make([]*delivery.Insertion, 0, finalInsertionSize)}
 	for i := 0; i < finalInsertionSize; i++ {
 		reqIns := req.Insertion[index]
@@ -54,15 +58,16 @@ func (sdk *SDKDelivery) RunDelivery(deliveryRequest *DeliveryRequest) (*delivery
 }
 
 // newResponseInsertion prepares the response insertion.
-func newResponseInsertion(reqIns *delivery.Insertion, offset uint64) *delivery.Insertion {
+func newResponseInsertion(reqIns *delivery.Insertion, offset int) *delivery.Insertion {
 	insID := reqIns.InsertionId
 	if len(insID) == 0 {
 		insID = uuid.NewString()
 	}
+	position := uint64(offset)
 	respIns := &delivery.Insertion{
 		ContentId:   reqIns.ContentId,
 		InsertionId: insID,
-		Position:    &offset,
+		Position:    &position,
 	}
 	return respIns
 }
