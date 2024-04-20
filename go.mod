@@ -1,4 +1,4 @@
-module promoted.ai/promoted-go-delivery-client
+module github.com/promoted.ai/promoted-go-delivery-client
 
 go 1.21.4
 
