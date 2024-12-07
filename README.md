@@ -239,7 +239,61 @@ Field Name | Type | Optional? | Description
 
 ## Calling the Delivery API
 
-TODO
+Let's say your code to return results to the end-user currently looks like this:
+
+```go
+func getProducts(w http.ResponseWriter, r *http.Request) {
+  // Logic to get products from DB, apply filtering, etc.
+  products := getProducts()
+
+  w.Header().Set("Content-Type", "application/json")
+  w.WriteHeader(http.StatusOK)
+  json.NewEncoder(w).Encode(products)
+}
+```
+
+We might modify it to something like this:
+
+```go
+// Retrieve products
+products := getProducts()
+
+// Create a map of products to reorder after Promoted ranking.
+productsMap := make(map[int]Product, len(products))
+
+// Create insertions for each product for the Promtoed delivery request.
+insertions := make([]*delivery.Insertion, 0, len(products))
+for _, product := range products {
+  insertions = append(insertions, &delivery.Insertion{ContentId: strconv.Itoa(product.ID)})
+  productsMap[product.ID] = product
+}
+
+// Create a Promoted delivery request.
+req := &DeliveryRequest{
+  Request: &delivery.Request{
+    PlatformId: 0,
+    UserInfo:   &common.UserInfo{AnonUserId: "12355"},
+    Paging: &delivery.Paging{
+      Size:     100,
+      Starting: &delivery.Paging_Offset{Offset: 0},
+    },
+    Insertion: insertions,
+  },
+}
+
+// Call the Promoted delivery API.
+response, err := client.Deliver(req)
+
+// Apply Promoted's re-ranking to the products.
+rerankedProducts := make([]Product, 0, len(products))
+for _, insertion := range response.Response.Insertion {
+  id, _ := strconv.Atoi(insertion.ContentId)
+  rerankedProducts = append(rerankedProducts, productsMap[id])
+}
+
+// Go ahead and return results to the caller of your API.
+```
+
 
 ## Pages of Request Insertions
 
