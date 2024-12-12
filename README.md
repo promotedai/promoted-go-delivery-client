@@ -23,8 +23,8 @@ builder := NewPromotedDeliveryClientBuilder()
 client, _ := builder.
   WithDeliveryEndpoint("<delivery endpoint from Promoted.ai>").
   WithDeliveryAPIKey("<delivery endpoint from Promoted.ai>").
-  WithMetricsEndpoint("<delivery endpoint from Promoted.ai>").
-  WithMetricsAPIKey("<delivery endpoint from Promoted.ai>").
+  WithMetricsEndpoint("<metrics endpoint from Promoted.ai>").
+  WithMetricsAPIKey("<metrics endpoint from Promoted.ai>").
   Build()
 ```
 
