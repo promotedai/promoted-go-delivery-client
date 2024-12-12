@@ -23,7 +23,7 @@ func (f *TestApiFactory) CreateDeliveryAPI(endpoint, apiKey string, timeoutMilli
 }
 
 // CreateApiMetrics creates an API metrics instance.
-func (f *TestApiFactory) CreateApiMetrics(endpoint, apiKey string, timeoutMillis int64) MetricsAPI {
+func (f *TestApiFactory) CreateMetricsAPI(endpoint, apiKey string, timeoutMillis int64) MetricsAPI {
 	return f.metricsAPI
 }
 

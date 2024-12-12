@@ -127,7 +127,7 @@ func (b *PromotedDeliveryClientBuilder) Build() (*PromotedDeliveryClient, error)
 		b.warmup,
 	)
 
-	metricsAPI := b.apiFactory.CreateApiMetrics(
+	metricsAPI := b.apiFactory.CreateMetricsAPI(
 		b.metricsEndpoint,
 		b.metricsAPIKey,
 		b.metricsTimeoutMillis,

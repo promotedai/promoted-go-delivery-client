@@ -4,7 +4,7 @@ package delivery
 type APIFactory interface {
 	CreateSDKDelivery() DeliveryAPI
 	CreateDeliveryAPI(endpoint, apiKey string, timeoutMillis int64, maxRequestInsertions int, acceptGzip, warmup bool) DeliveryAPI
-	CreateApiMetrics(endpoint, apiKey string, timeoutMillis int64) MetricsAPI
+	CreateMetricsAPI(endpoint, apiKey string, timeoutMillis int64) MetricsAPI
 }
 
 // DefaultAPIFactory is the default implementation of ApiFactory.
