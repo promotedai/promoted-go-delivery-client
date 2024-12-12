@@ -91,7 +91,7 @@ func (d *PromotedDeliveryAPI) RunDelivery(deliveryRequest *DeliveryRequest) (*de
 	ctx, cancel := context.WithTimeout(context.Background(), d.timeoutDuration)
 	defer cancel()
 
-	requestBody, err := json.Marshal(deliveryRequest.Clone(d.maxRequestInsertions))
+	requestBody, err := json.Marshal(deliveryRequest.Clone(d.maxRequestInsertions).Request)
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling delivery request: %v", err)
 	}
