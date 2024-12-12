@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/promotedai/schema/generated/go/proto/delivery"
+	"google.golang.org/protobuf/encoding/protojson"
 )
 
 const deliveryEndpointSuffix = "/deliver"
@@ -91,7 +92,15 @@ func (d *PromotedDeliveryAPI) RunDelivery(deliveryRequest *DeliveryRequest) (*de
 	ctx, cancel := context.WithTimeout(context.Background(), d.timeoutDuration)
 	defer cancel()
 
-	requestBody, err := json.Marshal(deliveryRequest.Clone(d.maxRequestInsertions).Request)
+	var request *delivery.Request
+	if len(deliveryRequest.Request.Insertion) > d.maxRequestInsertions {
+		// Only clone if we need to trim insertions.
+		request = deliveryRequest.Clone(1000).Request
+	} else {
+		request = deliveryRequest.Request
+	}
+
+	requestBody, err := json.Marshal(request)
 	if err != nil {
 		return nil, fmt.Errorf("error marshaling delivery request: %v", err)
 	}
@@ -141,7 +150,7 @@ func (d *PromotedDeliveryAPI) processUncompressedResponse(body io.Reader) (*deli
 	}
 
 	var resp delivery.Response
-	err = json.Unmarshal(buf.Bytes(), &resp)
+	err = protojson.Unmarshal(buf.Bytes(), &resp)
 	if err != nil {
 		return nil, fmt.Errorf("error unmarshaling JSON response: %v", err)
 	}
@@ -162,7 +171,7 @@ func (d *PromotedDeliveryAPI) processCompressedResponse(body io.Reader) (*delive
 	}
 
 	var resp delivery.Response
-	err = json.Unmarshal(buf.Bytes(), &resp)
+	err = protojson.Unmarshal(buf.Bytes(), &resp)
 	if err != nil {
 		return nil, fmt.Errorf("error unmarshaling JSON response: %v", err)
 	}
