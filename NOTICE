@@ -1,0 +1,36 @@
+This product includes software developed by Promoted.ai.
+
+It also includes third-party software dependencies, which are subject to the following licenses:
+
+---
+
+github.com/golang/protobuf  
+License: BSD-3-Clause  
+https://github.com/golang/protobuf/blob/v1.5.0/LICENSE  
+
+---
+
+github.com/google/uuid  
+License: BSD-3-Clause  
+https://github.com/google/uuid/blob/v1.6.0/LICENSE  
+
+---
+
+google.golang.org/protobuf  
+License: BSD-3-Clause  
+https://github.com/protocolbuffers/protobuf-go/blob/v1.35.2/LICENSE  
+
+---
+
+github.com/promotedai/schema  
+License: Dual licensed under:
+ - Server Side Public License v1 (SSPL v1)  
+   https://www.mongodb.com/licensing/server-side-public-license  
+ - Elastic License 2.0 (ELv2)  
+   https://www.elastic.co/licensing/elastic-license  
+
+The source code in this repository is covered by (i) a dual license under the Server Side Public License v1 and the Elastic License 2.0.
+
+---
+
+For additional information or full license texts, please refer to the linked license URLs or the third-party module repositories.
